@@ -374,35 +374,35 @@ find_package (AsciiDoc)
 cmake_dependent_option (WITH_DOC "Build Reference Guide documentation (requires DocBook)" OFF
                        "PYTHONINTERP_FOUND;ASCIIDOC_FOUND" OFF)
 
-if (MSVC)
-  if (WITH_OPENPGM)
-    #   set (OPENPGM_ROOT "" CACHE PATH "Location of OpenPGM")
-    set (OPENPGM_VERSION_MAJOR 5)
-    set (OPENPGM_VERSION_MINOR 2)
-    set (OPENPGM_VERSION_MICRO 122)
-    if (CMAKE_CL_64)
-      find_path (OPENPGM_ROOT include/pgm/pgm.h
-                PATHS
-                "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Miru\\OpenPGM ${OPENPGM_VERSION_MAJOR}.${OPENPGM_VERSION_MINOR}.${OPENPGM_VERSION_MICRO}]"
-                NO_DEFAULT_PATH
-               )
-      message (STATUS "OpenPGM x64 detected - ${OPENPGM_ROOT}")
-    else ()
-      find_path (OPENPGM_ROOT include/pgm/pgm.h
-                PATHS
-                "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Miru\\OpenPGM ${OPENPGM_VERSION_MAJOR}.${OPENPGM_VERSION_MINOR}.${OPENPGM_VERSION_MICRO}]"
-                "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Miru\\OpenPGM ${OPENPGM_VERSION_MAJOR}.${OPENPGM_VERSION_MINOR}.${OPENPGM_VERSION_MICRO}]"
-                NO_DEFAULT_PATH
-               )
-      message (STATUS "OpenPGM x86 detected - ${OPENPGM_ROOT}")
-    endif (CMAKE_CL_64)
-    set (OPENPGM_INCLUDE_DIRS ${OPENPGM_ROOT}/include)
-    set (OPENPGM_LIBRARY_DIRS ${OPENPGM_ROOT}/lib)
-    set (OPENPGM_LIBRARIES
-      optimized libpgm${MSVC_TOOLSET}-mt-${OPENPGM_VERSION_MAJOR}_${OPENPGM_VERSION_MINOR}_${OPENPGM_VERSION_MICRO}.lib
-      debug libpgm${MSVC_TOOLSET}-mt-gd-${OPENPGM_VERSION_MAJOR}_${OPENPGM_VERSION_MINOR}_${OPENPGM_VERSION_MICRO}.lib)
-  endif ()
-else ()
+#if (MSVC)
+#  if (WITH_OPENPGM)
+#    #   set (OPENPGM_ROOT "" CACHE PATH "Location of OpenPGM")
+#    set (OPENPGM_VERSION_MAJOR 5)
+#    set (OPENPGM_VERSION_MINOR 2)
+#    set (OPENPGM_VERSION_MICRO 122)
+#    if (CMAKE_CL_64)
+#      find_path (OPENPGM_ROOT include/pgm/pgm.h
+#                PATHS
+#                "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Miru\\OpenPGM ${OPENPGM_VERSION_MAJOR}.${OPENPGM_VERSION_MINOR}.${OPENPGM_VERSION_MICRO}]"
+#                NO_DEFAULT_PATH
+#               )
+#      message (STATUS "OpenPGM x64 detected - ${OPENPGM_ROOT}")
+#    else ()
+#      find_path (OPENPGM_ROOT include/pgm/pgm.h
+#                PATHS
+#                "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Miru\\OpenPGM ${OPENPGM_VERSION_MAJOR}.${OPENPGM_VERSION_MINOR}.${OPENPGM_VERSION_MICRO}]"
+#                "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Miru\\OpenPGM ${OPENPGM_VERSION_MAJOR}.${OPENPGM_VERSION_MINOR}.${OPENPGM_VERSION_MICRO}]"
+#                NO_DEFAULT_PATH
+#               )
+#      message (STATUS "OpenPGM x86 detected - ${OPENPGM_ROOT}")
+#    endif (CMAKE_CL_64)
+#    set (OPENPGM_INCLUDE_DIRS ${OPENPGM_ROOT}/include)
+#    set (OPENPGM_LIBRARY_DIRS ${OPENPGM_ROOT}/lib)
+#    set (OPENPGM_LIBRARIES
+#      optimized libpgm${MSVC_TOOLSET}-mt-${OPENPGM_VERSION_MAJOR}_${OPENPGM_VERSION_MINOR}_${OPENPGM_VERSION_MICRO}.lib
+#      debug libpgm${MSVC_TOOLSET}-mt-gd-${OPENPGM_VERSION_MAJOR}_${OPENPGM_VERSION_MINOR}_${OPENPGM_VERSION_MICRO}.lib)
+#  endif ()
+#else ()
   if (WITH_OPENPGM)
     #  message (FATAL_ERROR "WITH_OPENPGM not implemented")
 
@@ -431,7 +431,7 @@ else ()
 
     endif ()
   endif ()
-endif ()
+#endif ()
 
 
 #-----------------------------------------------------------------------------
@@ -794,22 +794,22 @@ if (NOT ZMQ_BUILD_FRAMEWORK)
   install (FILES ${CMAKE_CURRENT_BINARY_DIR}/libzmq.pc DESTINATION lib/pkgconfig)
 endif ()
 
-if (MSVC)
-  if (CMAKE_CL_64)
-    set (nsis-template ${CMAKE_CURRENT_SOURCE_DIR}/builds/cmake/NSIS.template64.in)
-  else ()
-    set (nsis-template ${CMAKE_CURRENT_SOURCE_DIR}/builds/cmake/NSIS.template32.in)
-  endif ()
-
-  add_custom_command (
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/NSIS.template.in
-    COMMAND ${CMAKE_COMMAND}
-    ARGS -E
-    copy
-    ${nsis-template}
-    ${CMAKE_CURRENT_BINARY_DIR}/NSIS.template.in
-    DEPENDS ${nsis-template})
-endif ()
+#if (MSVC)
+#  if (CMAKE_CL_64)
+#    set (nsis-template ${CMAKE_CURRENT_SOURCE_DIR}/builds/cmake/NSIS.template64.in)
+#  else ()
+#    set (nsis-template ${CMAKE_CURRENT_SOURCE_DIR}/builds/cmake/NSIS.template32.in)
+#  endif ()
+#
+#  add_custom_command (
+#    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/NSIS.template.in
+#    COMMAND ${CMAKE_COMMAND}
+#    ARGS -E
+#    copy
+#    ${nsis-template}
+#    ${CMAKE_CURRENT_BINARY_DIR}/NSIS.template.in
+#    DEPENDS ${nsis-template})
+#endif ()
 
 file (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc)
 file (GLOB docs RELATIVE ${CMAKE_CURRENT_BINARY_DIR}/ "${CMAKE_CURRENT_SOURCE_DIR}/doc/*.txt")
@@ -884,35 +884,35 @@ if (BUILD_STATIC)
   list(APPEND target_outputs "libzmq-static")
 endif()
 
-if (MSVC)
-  # Suppress linker warnings caused by #ifdef omission
-  # of file content.
-  set( CMAKE_STATIC_LINKER_FLAGS /ignore:4221 )
-  if (BUILD_SHARED)
-    add_library (libzmq SHARED ${sources} ${public_headers} ${html-docs} ${readme-docs} ${CMAKE_CURRENT_BINARY_DIR}/NSIS.template.in ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
-    set_target_properties (libzmq PROPERTIES
-      PUBLIC_HEADER "${public_headers}"
-      RELEASE_POSTFIX "${MSVC_TOOLSET}-mt-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
-      RELWITHDEBINFO_POSTFIX "${MSVC_TOOLSET}-mt-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
-      MINSIZEREL_POSTFIX "${MSVC_TOOLSET}-mt-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
-      DEBUG_POSTFIX "${MSVC_TOOLSET}-mt-gd-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
-      RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
-      COMPILE_DEFINITIONS "DLL_EXPORT"
-      OUTPUT_NAME "libzmq")
-  endif()
-
-  if (BUILD_STATIC)
-    add_library (libzmq-static STATIC ${sources} ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
-    set_target_properties (libzmq-static PROPERTIES
-      PUBLIC_HEADER "${public_headers}"
-      RELEASE_POSTFIX "${MSVC_TOOLSET}-mt-s-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
-      RELWITHDEBINFO_POSTFIX "${MSVC_TOOLSET}-mt-s-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
-      MINSIZEREL_POSTFIX "${MSVC_TOOLSET}-mt-s-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
-      DEBUG_POSTFIX "${MSVC_TOOLSET}-mt-sgd-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
-      COMPILE_FLAGS "/DZMQ_STATIC"
-      OUTPUT_NAME "libzmq")
-  endif()
-else ()
+#if (MSVC)
+#  # Suppress linker warnings caused by #ifdef omission
+#  # of file content.
+#  set( CMAKE_STATIC_LINKER_FLAGS /ignore:4221 )
+#  if (BUILD_SHARED)
+#    add_library (libzmq SHARED ${sources} ${public_headers} ${html-docs} ${readme-docs} ${CMAKE_CURRENT_BINARY_DIR}/NSIS.template.in ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
+#    set_target_properties (libzmq PROPERTIES
+#      PUBLIC_HEADER "${public_headers}"
+#      RELEASE_POSTFIX "${MSVC_TOOLSET}-mt-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
+#      RELWITHDEBINFO_POSTFIX "${MSVC_TOOLSET}-mt-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
+#      MINSIZEREL_POSTFIX "${MSVC_TOOLSET}-mt-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
+#      DEBUG_POSTFIX "${MSVC_TOOLSET}-mt-gd-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
+#      RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+#      COMPILE_DEFINITIONS "DLL_EXPORT"
+#      OUTPUT_NAME "libzmq")
+#  endif()
+#
+#  if (BUILD_STATIC)
+#    add_library (libzmq-static STATIC ${sources} ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
+#    set_target_properties (libzmq-static PROPERTIES
+#      PUBLIC_HEADER "${public_headers}"
+#      RELEASE_POSTFIX "${MSVC_TOOLSET}-mt-s-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
+#      RELWITHDEBINFO_POSTFIX "${MSVC_TOOLSET}-mt-s-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
+#      MINSIZEREL_POSTFIX "${MSVC_TOOLSET}-mt-s-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
+#      DEBUG_POSTFIX "${MSVC_TOOLSET}-mt-sgd-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}"
+#      COMPILE_FLAGS "/DZMQ_STATIC"
+#      OUTPUT_NAME "libzmq")
+#  endif()
+#else ()
   # avoid building everything twice for shared + static
   # only on *nix, as Windows needs different preprocessor defines in static builds
   if (NOT MINGW)
@@ -967,7 +967,7 @@ else ()
       PREFIX "lib")
   endif()
 
-endif ()
+#endif ()
 
 if (BUILD_STATIC)
   target_compile_definitions(libzmq-static
@@ -1105,31 +1105,31 @@ endif ()
 
 include(GNUInstallDirs)
 
-if (MSVC)
-  install (TARGETS ${target_outputs}
-          EXPORT ${PROJECT_NAME}-targets
-          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-          PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-          COMPONENT SDK)
-  if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    install (TARGETS ${target_outputs}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-            COMPONENT SDK)
-    if (NOT CMAKE_PDB_OUTPUT_DIRECTORY AND BUILD_SHARED)
-      install (FILES ${CMAKE_CURRENT_BINARY_DIR}/bin/libzmq${MSVC_TOOLSET}-mt-gd-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}.pdb DESTINATION lib
-            COMPONENT SDK)
-    endif ()
-  elseif (BUILD_SHARED)
-    install (TARGETS libzmq
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-            COMPONENT Runtime)
-  endif ()
-else ()
+#if (MSVC)
+#  install (TARGETS ${target_outputs}
+#          EXPORT ${PROJECT_NAME}-targets
+#          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#          PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#          COMPONENT SDK)
+#  if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+#    install (TARGETS ${target_outputs}
+#            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#            COMPONENT SDK)
+#    if (NOT CMAKE_PDB_OUTPUT_DIRECTORY AND BUILD_SHARED)
+#      install (FILES ${CMAKE_CURRENT_BINARY_DIR}/bin/libzmq${MSVC_TOOLSET}-mt-gd-${ZMQ_VERSION_MAJOR}_${ZMQ_VERSION_MINOR}_${ZMQ_VERSION_PATCH}.pdb DESTINATION lib
+#            COMPONENT SDK)
+#    endif ()
+#  elseif (BUILD_SHARED)
+#    install (TARGETS libzmq
+#            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#            COMPONENT Runtime)
+#  endif ()
+#else ()
   install (TARGETS ${target_outputs}
           EXPORT ${PROJECT_NAME}-targets
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -1137,7 +1137,7 @@ else ()
           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
           FRAMEWORK DESTINATION "Library/Frameworks"
           PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-endif ()
+#endif ()
 
 # install (FILES ${public_headers}
 #          DESTINATION include
