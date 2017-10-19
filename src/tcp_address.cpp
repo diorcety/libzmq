@@ -257,7 +257,9 @@ int zmq::tcp_address_t::get_interface_name (unsigned long index,
     char *if_name_result = NULL;
 
 #if !defined ZMQ_HAVE_WINDOWS_TARGET_XP && !defined ZMQ_HAVE_WINDOWS_UWP
+#if !defined _WIN32_WINNT || _WIN32_WINNT >= 0x0600
     if_name_result = if_indextoname (index, buffer);
+#endif
 #endif
 
     if (if_name_result == NULL) {
@@ -654,10 +656,12 @@ int zmq::tcp_address_t::resolve (const char *name_,
     if (pos != std::string::npos) {
         std::string if_str = addr_str.substr (pos + 1);
         addr_str = addr_str.substr (0, pos);
-        if (isalpha (if_str.at (0)))
+        if (isalpha (if_str.at (0))) {
 #if !defined ZMQ_HAVE_WINDOWS_TARGET_XP && !defined ZMQ_HAVE_WINDOWS_UWP       \
   && !defined ZMQ_HAVE_VXWORKS
+#if !defined _WIN32_WINNT || _WIN32_WINNT >= 0x0600
             zone_id = if_nametoindex (if_str.c_str ());
+#endif
 #else
             // The function 'if_nametoindex' is not supported on Windows XP.
             // If we are targeting XP using a vxxx_xp toolset then fail.
@@ -666,8 +670,9 @@ int zmq::tcp_address_t::resolve (const char *name_,
             // This could be fixed with a runtime check.
             zone_id = 0;
 #endif
-        else
+        } else {
             zone_id = (uint32_t) atoi (if_str.c_str ());
+        }
         if (zone_id == 0) {
             errno = EINVAL;
             return -1;
