@@ -105,6 +105,11 @@ class thread_t
 
 #ifdef ZMQ_HAVE_WINDOWS
     HANDLE descriptor;
+#if defined _WIN32_WCE
+    DWORD id;
+#else
+    unsigned int id;
+#endif
 #elif defined ZMQ_HAVE_VXWORKS
     int descriptor;
     enum
