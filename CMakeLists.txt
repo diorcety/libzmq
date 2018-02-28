@@ -872,7 +872,7 @@ endif ()
 #-----------------------------------------------------------------------------
 # output
 option(BUILD_SHARED "Whether or not to build the shared object"  ON)
-option(BUILD_STATIC "Whether or not to build the static archive" ON)
+option(BUILD_STATIC "Whether or not to build the static archive" OFF)
 
 list(APPEND target_outputs "")
 
