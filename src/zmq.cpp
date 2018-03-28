@@ -693,7 +693,7 @@ inline int zmq_poller_poll (zmq_pollitem_t *items_, int nitems_, long timeout_)
     // implement zmq_poll on top of zmq_poller
     int rc;
     zmq_poller_event_t *events;
-    zmq::socket_poller_t poller;
+    zmq::socket_poller_t *poller = new zmq::socket_poller_t;
     events = new (std::nothrow) zmq_poller_event_t[nitems_];
     alloc_assert (events);
 
@@ -715,12 +715,13 @@ inline int zmq_poller_poll (zmq_pollitem_t *items_, int nitems_, long timeout_)
                 }
             }
             if (modify) {
-                rc = zmq_poller_modify (&poller, items_[i].socket, e);
+                rc = zmq_poller_modify (poller, items_[i].socket, e);
             } else {
-                rc = zmq_poller_add (&poller, items_[i].socket, NULL, e);
+                rc = zmq_poller_add (poller, items_[i].socket, NULL, e);
             }
             if (rc < 0) {
                 delete[] events;
+                delete poller;
                 return rc;
             }
         } else {
@@ -734,21 +735,23 @@ inline int zmq_poller_poll (zmq_pollitem_t *items_, int nitems_, long timeout_)
                 }
             }
             if (modify) {
-                rc = zmq_poller_modify_fd (&poller, items_[i].fd, e);
+                rc = zmq_poller_modify_fd (poller, items_[i].fd, e);
             } else {
-                rc = zmq_poller_add_fd (&poller, items_[i].fd, NULL, e);
+                rc = zmq_poller_add_fd (poller, items_[i].fd, NULL, e);
             }
             if (rc < 0) {
                 delete[] events;
+                delete poller;
                 return rc;
             }
         }
     }
 
     //  Wait for events
-    rc = zmq_poller_wait_all (&poller, events, nitems_, timeout_);
+    rc = zmq_poller_wait_all (poller, events, nitems_, timeout_);
     if (rc < 0) {
         delete[] events;
+        delete poller;
         if (zmq_errno () == EAGAIN) {
             return 0;
         }
@@ -783,6 +786,7 @@ inline int zmq_poller_poll (zmq_pollitem_t *items_, int nitems_, long timeout_)
 
     //  Cleanup
     delete[] events;
+    delete poller;
     return rc;
 }
 #endif // ZMQ_HAVE_POLLER
