@@ -376,7 +376,7 @@ int zmq::select_base_t::wait (int timeout)
 
     //  If there is just one family, there is no reason to use WSA events.
     int rc = 0;
-    const bool use_wsa_events = family_entries.size () > 1;
+    const bool use_wsa_events = family_entries.size () > 1 || TRUE;
     if (use_wsa_events) {
         // TODO: I don't really understand why we are doing this. If any of
         // the events was signaled, we will call select for each fd_family
