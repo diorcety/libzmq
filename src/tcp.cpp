@@ -352,7 +352,8 @@ void zmq::tcp_tune_loopback_fast_path (const fd_t socket_)
         if (WSAEOPNOTSUPP == lastError) {
             // This system is not Windows 8 or Server 2012, and the call is not supported.
         } else {
-            wsa_assert (false);
+            // This is not a big deal (returns WSAEINVAL on Windows XP)
+            // wsa_assert (false);
         }
     }
 #else
