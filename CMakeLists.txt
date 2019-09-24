@@ -472,7 +472,7 @@ if (WIN32)
     add_definitions (-D_WINSOCK_DEPRECATED_NO_WARNINGS)
 endif ()
 
-if (MSVC)
+if (MSVC AND NOT ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
   # Parallel make.
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 
