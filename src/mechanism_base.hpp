@@ -36,6 +36,8 @@ namespace zmq
 {
 class mechanism_base_t : public mechanism_t
 {
+  public:
+    virtual ~mechanism_base_t ();
   protected:
     mechanism_base_t (session_base_t *const session_,
                       const options_t &options_);
